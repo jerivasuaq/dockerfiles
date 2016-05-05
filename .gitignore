@@ -1,0 +1,7 @@
+domjudge_docker/db/data/*
+domjudge_docker/web/src/*
+domjudge_docker/problems/*
+*.swp
+
+
+
