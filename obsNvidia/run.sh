@@ -1,6 +1,8 @@
 #!/bin/sh
 
-COMMAND=/bin/bash
+#COMMAND=/bin/bash
+#COMMAND=obs
+ENTRY=obs
 
 xhost + # allow connections to X server
 docker run \
@@ -12,4 +14,6 @@ docker run \
 	-e DISPLAY=unix$DISPLAY \
 	-v="/tmp/.X11-unix:/tmp/.X11-unix:rw"  \
 	--device /dev/snd \
+    --entrypoint=$ENTRY \
 	obs_with_nvidia_driver $COMMAND
+
