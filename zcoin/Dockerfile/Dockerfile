@@ -21,50 +21,33 @@ MAINTAINER jerivas<jerivas.qro@gmail.com>
 RUN \
     apt-get update && \
     apt-get install -y \
-    build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils libboost-all-dev
+    build-essential libtool autotools-dev automake pkg-config libssl-dev \
+        libevent-dev bsdmainutils libboost-all-dev wget unzip
     
-# RUN \
-#     apt-get install -y software-properties-common software-properties-common \
-#     add-apt-repository ppa:bitcoin/bitcoin \
-#     apt-get update \
-#     apt-get install libdb4.8-dev libdb4.8++-dev
-#
-# RUN \
-#    apt-get install -y --no-install-recommends \
-#    ca-certificates \
-#    gconf-service \
-#    hicolor-icon-theme \
-#    libappindicator1 \
-#    libasound2 \
-#    libcanberra-gtk-module \
-#    libcurl3 \
-#    libexif-dev \
-#    libgconf-2-4 \
-#    libgl1-mesa-dri \
-#    libgl1-mesa-glx \
-#    libnspr4 \
-#    libnss3 \
-#    libpango1.0-0 \
-#    libv4l-0 \
-#    libxss1 \
-#    libxtst6 \
-#    wget \
-#    xdg-utils 
-#    
-#RUN \
-#    apt-get install -y --no-install-recommends xz-utils
-#
-#RUN \
-#    apt-get install -y --no-install-recommends libudev-dev libudev1
-#
-##RUN wget -O popcorn-time.tar.xz http://popcorntime.ag/download.php?file=popcorn-time-community-v0.4.0-2-l64.tar.xz 
-##RUN wget -O popcorn-time.tar.xz http://popcorntimece.ch/Downloads/Popcorn%20Time%20CE%20x64%20Linux.tar.xz
-##RUN wget -O popcorn-time.tar.xz https://popcorntime.sh/download/build/Popcorn-Time-0.3.9-Linux-64.tar.xz
-##RUN wget -O popcorn-time.tar.xz https://popcorntime.sh/download/build/Popcorn-Time-0.3.9-Linux-64.tar.xz
-#RUN wget -O popcorn-time.tar.xz http://mirror02.popcorntime.sh/build/Popcorn-Time-0.3.10-Linux-64.tar.xz
-#
-#
-#RUN mkdir /opt/popcorntime/ && tar xvf popcorn-time.tar.xz -C /opt/popcorntime/
+RUN \
+    apt-get install -y libminiupnpc-dev libzmq3-dev \
+        libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools \
+        libprotobuf-dev protobuf-compiler libqrencode-dev
+
+
+# INTALLING BERKELEY DB
+# https://github.com/bitcoin/bitcoin/blob/master/doc/build-unix.md#berkeley-db
+RUN cd /opt/ && BITCOIN_ROOT=$(pwd) && \
+    DB4_PREFIX="${BITCOIN_ROOT}/db4" && \
+    mkdir -p $DB4_PREFIX && \
+    wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz' && \
+    echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256sum -c && \
+    tar -xzvf db-4.8.30.NC.tar.gz && \
+    cd db-4.8.30.NC/build_unix/ && \
+    ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$DB4_PREFIX && \
+    make install
+
+RUN wget -O zcoin.zip https://github.com/zcoinofficial/zcoin/archive/master.zip && \
+    DB4_PREFIX="/opt/db4" && \
+    unzip zcoin.zip -d /opt/ && cd /opt/zcoin-master && \
+    ./autogen.sh && ./configure LDFLAGS="-L${DB4_PREFIX}/lib/" CPPFLAGS="-I${DB4_PREFIX}/include/" && \
+    make
+
 #
 #RUN ln -sf /lib/$(arch)-linux-gnu/libudev.so.1 /lib/$(arch)-linux-gnu/libudev.so.0
 #
