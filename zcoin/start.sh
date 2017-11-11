@@ -6,19 +6,19 @@ if [ $# -gt 0 ]; then
     ENTRYPOINT="--entrypoint $@"
 fi
 
-docker run \
+echo docker run \
     -it --rm \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v $PWD/home_zcoin/:/home/zcoin \
+    -e DISPLAY=unix$DISPLAY \
     --net host \
     --memory 512mb \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -v $PWD/zcoin/:/home/zcoin \
-    -e DISPLAY=unix$DISPLAY \
     --device /dev/snd \
     --device /dev/dri \
+    --user $UID:$GID \
     --name zcoin \
     $ENTRYPOINT \
 	jerivas/zcoin 
     
 
-#    -e http_proxy=localhost:3128 \
     

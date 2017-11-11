@@ -51,11 +51,15 @@ RUN wget -O zcoin.zip https://github.com/zcoinofficial/zcoin/archive/master.zip 
 
 RUN useradd -ms /bin/bash zcoin
 RUN usermod -aG audio zcoin
+RUN chown -R zcoin:zcoin /home/zcoin
+
+WORKDIR /home/zcoin
 
 USER zcoin
 ENV HOME /home/zcoin
 VOLUME /home/zcoin
 ENV PULSE_SERVER unix:/tmp/pulse
+
 
 
 
