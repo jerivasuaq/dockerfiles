@@ -48,11 +48,17 @@ RUN wget -O zcoin.zip https://github.com/zcoinofficial/zcoin/archive/master.zip 
     ./autogen.sh && ./configure LDFLAGS="-L${DB4_PREFIX}/lib/" CPPFLAGS="-I${DB4_PREFIX}/include/" && \
     make
 
-#
-#RUN ln -sf /lib/$(arch)-linux-gnu/libudev.so.1 /lib/$(arch)-linux-gnu/libudev.so.0
-#
-#COPY start.sh start-withNvidia.sh config.sh config-withNvidia.sh  /
-#
-#ENTRYPOINT [ "/opt/popcorntime/Popcorn-Time" ]
-#
+
+RUN useradd -ms /bin/bash zcoin
+RUN usermod -aG audio zcoin
+
+USER zcoin
+ENV HOME /home/zcoin
+VOLUME /home/zcoin
+ENV PULSE_SERVER unix:/tmp/pulse
+
+
+
+
+ENTRYPOINT [ "/opt/zcoin-master/src/qt/zcoin-qt" ]
 
