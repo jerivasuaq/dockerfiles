@@ -6,7 +6,7 @@ if [ $# -gt 0 ]; then
     ENTRYPOINT="--entrypoint $@"
 fi
 
-echo docker run \
+docker run \
     -it --rm \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v $PWD/home_zcoin/:/home/zcoin \
