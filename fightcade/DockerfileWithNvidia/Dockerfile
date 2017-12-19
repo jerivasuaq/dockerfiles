@@ -1,4 +1,4 @@
-FROM jerivas/popcorntime
+FROM jerivas/fightcade
 MAINTAINER jerivas
 
 USER root
@@ -12,12 +12,10 @@ ADD NVIDIA-DRIVER.run /tmp/NVIDIA-DRIVER.run
 RUN sh /tmp/NVIDIA-DRIVER.run -a -N --ui=none --no-kernel-module
 RUN rm /tmp/NVIDIA-DRIVER.run
 
-RUN useradd -ms /bin/bash popcorntime
-RUN usermod -aG audio popcorntime
+USER fightcade
+ENV HOME /home/fightcade
+WORKDIR  /home/fightcade
+VOLUME /home/fightcade
 
-USER popcorntime
-ENV HOME /home/popcorntime
-VOLUME /home/popcorntime
-ENV PULSE_SERVER unix:/tmp/pulse
 
 

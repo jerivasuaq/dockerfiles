@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker build -t jerivas/popcorntime_nvidia DockerfileWithNvidia/
+docker build -t jerivas/fightcade_nvidia DockerfileWithNvidia/
 
 

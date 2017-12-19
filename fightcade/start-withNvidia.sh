@@ -1,7 +1,8 @@
 #!/bin/bash
 
+CMD=""
 if [ $# -gt 0 ]; then
-    ENTRYPOINT="--entrypoint $@"
+    CMD="--entrypoint /bin/bash -c '$@'"
 fi
 
 SND="--device /dev/snd 
@@ -18,9 +19,9 @@ VIDEO="
     --device /dev/dri 
 	"
 
-
-
 DBUS="-v /run/dbus/:/run/dbus/ -v /dev/shm:/dev/shm"
+HOME="-v $PWD/home:/home/fightcade"
+
 xhost + # allow connections to X server
 
 docker run \
@@ -31,10 +32,11 @@ docker run \
 	$SND \
 	$VIDEO \
 	$DBUS \
-    --name fightcade \
+	$HOME \
+    --name fightcade-nvidia \
     $ENTRYPOINT \
-	jerivas/fightcad3
+	jerivas/fightcade_nvidia $CMD
     
 
 #    -e http_proxy=localhost:3128 \
-    
+
