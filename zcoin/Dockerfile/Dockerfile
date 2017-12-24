@@ -14,7 +14,7 @@
 # RUN zcoin.sh
 
 
-FROM debian
+FROM debian:stretch-slim
 MAINTAINER jerivas<jerivas.qro@gmail.com>
 
 
