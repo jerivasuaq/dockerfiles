@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build -t jerivas/zcoin Dockerfile
+docker build -t jerivas/zcoinqt Dockerfile
 

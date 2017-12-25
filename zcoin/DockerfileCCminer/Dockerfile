@@ -1,63 +1,92 @@
-FROM nvidia/cuda:8.0-devel
-MAINTAINER jerivas<jerivas.qro@gmail.com>
-
+FROM nvidia/cuda:9.0-devel
 
 RUN \
     apt-get update && \
     apt-get install -y \
 		wget git \
 		libcurl4-openssl-dev libssl-dev libjansson-dev automake autotools-dev build-essential 
-    
-#RUN \
-#    apt-get install -y libminiupnpc-dev libzmq3-dev \
-#        libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools \
-#        libprotobuf-dev protobuf-compiler libqrencode-dev
-#
-#
-## INTALLING BERKELEY DB
-## https://github.com/bitcoin/bitcoin/blob/master/doc/build-unix.md#berkeley-db
-#RUN cd /opt/ && BITCOIN_ROOT=$(pwd) && \
-#    DB4_PREFIX="${BITCOIN_ROOT}/db4" && \
-#    mkdir -p $DB4_PREFIX && \
-#    wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz' && \
-#    echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256sum -c && \
-#    tar -xzvf db-4.8.30.NC.tar.gz && \
-#    cd db-4.8.30.NC/build_unix/ && \
-#    ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$DB4_PREFIX && \
-#    make install
 
-#RUN wget -O zcoin.zip https://github.com/zcoinofficial/zcoin/archive/master.zip && \
-#    DB4_PREFIX="/opt/db4" && \
-#    unzip zcoin.zip -d /opt/ && cd /opt/zcoin-master && \
-#    ./autogen.sh && ./configure LDFLAGS="-L${DB4_PREFIX}/lib/" CPPFLAGS="-I${DB4_PREFIX}/include/" && \
-#    make
-#
+# Create a user to do the build
+ENV BUILD_FOLDER=/minerbuild
+ENV APP_FOLDER=/app
+ENV APP_USER=minerbuilder
+ENV CCMINER_VERSION=cuda-9
 
+RUN adduser $APP_USER && \
+    mkdir $BUILD_FOLDER && \
+    chown $APP_USER.users $BUILD_FOLDER
+
+# We'll build jansson as regular user
+USER $APP_USER
+
+# Now switch to the builder and check out the git repo
+USER $APP_USER
+
+# Clone from the git repo
+RUN cd $BUILD_FOLDER && \
+    git clone https://github.com/tpruvot/ccminer.git --branch $CCMINER_VERSION --single-branch
+
+ENV CCMINER_FOLDER=$BUILD_FOLDER/ccminer
+
+# Uncomment all the architectures
+
+ENV CCMINER_FOLDER=$BUILD_FOLDER/ccminer
+
+# Replace uncomment all the old architectures
+RUN cd $CCMINER_FOLDER && \
+    sed \
+     -e 's/#nvcc_ARCH += -gencode=arch=compute_61/nvcc_ARCH += -gencode=arch=compute_61/' \
+     -e 's/#nvcc_ARCH += -gencode=arch=compute_35/nvcc_ARCH += -gencode=arch=compute_35/' \
+     -e 's/#nvcc_ARCH += -gencode=arch=compute_30/nvcc_ARCH += -gencode=arch=compute_30/' \
+     Makefile.am > Makefile2.am
+RUN cd $CCMINER_FOLDER && \
+    cp Makefile2.am Makefile.am && \
+    rm Makefile2.am
+
+# Run the build
+RUN cd $CCMINER_FOLDER && \
+    ./build.sh
+
+# Run the build
+RUN cd $CCMINER_FOLDER && \
+    ./build.sh
+
+# Copy the ccminer binary to a /app folder
+USER root
+
+RUN mkdir $APP_FOLDER && \
+    chown $APP_USER.users $APP_FOLDER && \
+    cp $CCMINER_FOLDER/ccminer $APP_FOLDER
+
+# Switch to a multistage build with the runtime image
+FROM nvidia/cuda:9.0-runtime
+
+# Redefine the app user and folder - note app folder must be the same as the first stage
+ENV APP_FOLDER=/app
+ENV APP_USER=miner
+
+# Copy the stuff that we built
+COPY --from=0 $APP_FOLDER $APP_FOLDER
+COPY --from=0 /usr/local/lib /usr/local/lib
+
+# Get the non-devel versions of the libraries that we need
 RUN \
-	cd /opt/ && \
-	git clone -b cuda-8 https://github.com/tpruvot/ccminer.git && \
-	cd ccminer && \
-	./build.sh
+    apt-get update && \
+    apt-get install -y \
+	libssl1.0.0 libjansson4 automake build-essential libcurl3
 
-#RUN \
-#	find / -name libcuda.so -exec echo "export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:$(dirname {}):\" " \; >> ~/.bashrc && \
-#	find / -name libcuda.so -exec ln -s {} {}.1 \;
-#
 
-# Remove temporary files
 RUN rm -rf /var/lib/apt/lists/*
 
-RUN useradd -ms /bin/bash ccminer
-RUN usermod -aG audio ccminer
-RUN chown -R ccminer:ccminer /home/ccminer
+# Symlink the app to /usr/local/bin
+RUN ln -s $APP_FOLDER/ccminer /usr/local/bin/ccminer && \
+    chown -R root.root $APP_FOLDER
 
-WORKDIR /home/ccminer
+# Recreate and switch to the app user for this build
+RUN adduser $APP_USER
 
-USER ccminer
-ENV HOME /home/ccminer
-VOLUME /home/ccminer
+USER $APP_USER
 
+ENTRYPOINT [ ccminer ]
 
-
-#ENTRYPOINT [ "/opt/zcoin-master/src/qt/zcoin-qt" ]
 

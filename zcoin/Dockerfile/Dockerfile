@@ -1,21 +1,8 @@
-# Base docker image
-# docker run -ti --rm jerivas/zcoin /config > zcoin.sh
-# chmod +x zcoin.sh
-# dos2unix zcoin.sh
-# ./zcoin.sh
-# ```
-# 
-# The next time do:
-# 
-# ```
-# docker start zcoin
-# ```
-# 
-# RUN zcoin.sh
-
-
-FROM debian:stretch-slim
+FROM debian:stretch-slim as builder
 MAINTAINER jerivas<jerivas.qro@gmail.com>
+
+
+ENV APP_USER=zcoinqt
 
 
 RUN \
@@ -49,20 +36,32 @@ RUN wget -O zcoin.zip https://github.com/zcoinofficial/zcoin/archive/master.zip 
     make
 
 
-RUN useradd -ms /bin/bash zcoin
-RUN usermod -aG audio zcoin
-RUN chown -R zcoin:zcoin /home/zcoin
+FROM debian:stretch-slim 
 
-WORKDIR /home/zcoin
+ENV APP_USER=zcoinqt
 
-USER zcoin
-ENV HOME /home/zcoin
-VOLUME /home/zcoin
+RUN \
+    apt-get update && \
+    apt-get install -y \
+		libzmq5 libboost-system1.62.0 libboost-filesystem1.62.0 libboost-program-options1.62.0 libboost-thread1.62.0 libboost-chrono1.62.0 \
+		libqt5network5 libqt5widgets5 libqrencode3 libprotobuf10 libssl1.1 libminiupnpc10 libevent-pthreads-2.0-5 libevent-2.0-5
+
+RUN useradd -ms /bin/bash $APP_USER
+RUN usermod -aG audio $APP_USER
+RUN chown -R $APP_USER:$APP_USER /home/$APP_USER
+
+WORKDIR /home/$APP_USER
+
+
+COPY --from=builder /opt/zcoin-master/src/qt/zcoin-qt /usr/bin/zcoin-qt
+
+USER $APP_USER
+VOLUME /home/$APP_USER
 ENV PULSE_SERVER unix:/tmp/pulse
 
 
 
 
 
-ENTRYPOINT [ "/opt/zcoin-master/src/qt/zcoin-qt" ]
+ENTRYPOINT [ "zcoin-qt" ]
 
