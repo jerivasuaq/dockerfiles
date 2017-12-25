@@ -10,7 +10,7 @@ if [ $# -gt 0 ]; then
     fi
 fi
 
-docker run \
+nvidia-docker run \
     -it --rm \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v $PWD/home_ccminer:/home/ccminer \

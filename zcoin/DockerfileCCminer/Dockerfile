@@ -39,10 +39,10 @@ RUN \
 	cd ccminer && \
 	./build.sh
 
-RUN \
-	find / -name libcuda.so -exec echo "export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:$(dirname {}):\" " \; >> ~/.bashrc && \
-	find / -name libcuda.so -exec ln -s {} {}.1 \;
-
+#RUN \
+#	find / -name libcuda.so -exec echo "export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:$(dirname {}):\" " \; >> ~/.bashrc && \
+#	find / -name libcuda.so -exec ln -s {} {}.1 \;
+#
 
 # Remove temporary files
 RUN rm -rf /var/lib/apt/lists/*
@@ -53,7 +53,7 @@ RUN chown -R ccminer:ccminer /home/ccminer
 
 WORKDIR /home/ccminer
 
-#USER ccminer
+USER ccminer
 ENV HOME /home/ccminer
 VOLUME /home/ccminer
 
