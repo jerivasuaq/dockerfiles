@@ -63,7 +63,7 @@ FROM nvidia/cuda:9.0-runtime
 
 # Redefine the app user and folder - note app folder must be the same as the first stage
 ENV APP_FOLDER=/app
-ENV APP_USER=miner
+ENV APP_USER=ccminer
 
 # Copy the stuff that we built
 COPY --from=0 $APP_FOLDER $APP_FOLDER
@@ -83,10 +83,15 @@ RUN ln -s $APP_FOLDER/ccminer /usr/local/bin/ccminer && \
     chown -R root.root $APP_FOLDER
 
 # Recreate and switch to the app user for this build
-RUN adduser $APP_USER
+RUN useradd -ms /bin/bash $APP_USER
+RUN usermod -aG audio $APP_USER
+RUN chown -R $APP_USER:$APP_USER /home/$APP_USER
+
 
 USER $APP_USER
+WORKDIR /home/$APP_USER
+VOLUME /home/$APP_USER
 
-ENTRYPOINT [ ccminer ]
+ENTRYPOINT [ "ccminer" ]
 
 
