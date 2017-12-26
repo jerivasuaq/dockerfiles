@@ -9,16 +9,16 @@ fi
 docker run \
     -it --rm \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -v $PWD/home_zcoin/:/home/zcoin \
+    -v $PWD/home_zcoinqt/:/home/zcoinqt \
     -e DISPLAY=unix$DISPLAY \
     --net host \
     --memory 512mb \
     --device /dev/snd \
     --device /dev/dri \
-    --user $UID:$GID \
-    --name zcoin \
+    --name zcoinqt \
     $ENTRYPOINT \
-	jerivas/zcoin 
+	jerivas/zcoinqt
     
 
+#    --user $UID:$GID \
     
