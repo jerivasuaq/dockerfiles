@@ -12,5 +12,8 @@ RUN \
     /opt/conda/bin/conda install -c conda-forge jupyterhub 
 
 
+RUN \
+    mkdir  -p /srv/jupyterhub
 
+WORKDIR "/srv/jupyterhub"
 

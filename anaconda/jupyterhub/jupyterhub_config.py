@@ -39,10 +39,10 @@
 ## Grant admin users permission to access single-user servers.
 #  
 #  Users should be properly informed if this is enabled.
-#c.JupyterHub.admin_access = False
+c.JupyterHub.admin_access = True
 
 ## DEPRECATED since version 0.7.2, use Authenticator.admin_users instead.
-#c.JupyterHub.admin_users = set()
+c.JupyterHub.admin_users = set(['jerivas'])
 
 ## Allow named single-user servers per user
 #c.JupyterHub.allow_named_servers = False
@@ -210,7 +210,7 @@ c.JupyterHub.base_url = '/jupyter'
 #c.JupyterHub.load_groups = {}
 
 ## Specify path to a logo image to override the Jupyter logo in the banner.
-#c.JupyterHub.logo_file = ''
+c.JupyterHub.logo_file = 'logo.png'
 
 ## File to write PID Useful for daemonizing jupyterhub.
 #c.JupyterHub.pid_file = ''
@@ -635,7 +635,7 @@ c.JupyterHub.base_url = '/jupyter'
 #  Admin access should be treated the same way root access is.
 #  
 #  Defaults to an empty set, in which case no user has admin access.
-#c.Authenticator.admin_users = set()
+c.Authenticator.admin_users = set(['jerivas'])
 
 ## Automatically begin the login process
 #  
@@ -685,7 +685,7 @@ c.JupyterHub.base_url = '/jupyter'
 #  restrictions the authenticator has in place.
 #  
 #  If empty, does not perform any additional restriction.
-#c.Authenticator.whitelist = set()
+c.Authenticator.whitelist = set(['jerivas'])
 
 #------------------------------------------------------------------------------
 # LocalAuthenticator(Authenticator) configuration
@@ -720,7 +720,7 @@ c.JupyterHub.base_url = '/jupyter'
 #  already.
 #  
 #  Supports Linux and BSD variants only.
-#c.LocalAuthenticator.create_system_users = False
+c.LocalAuthenticator.create_system_users = True
 
 ## Whitelist all users from this UNIX group.
 #  

@@ -3,7 +3,7 @@
 CONTAINER_IMAGE=jerivas/anaconda
 CONTAINER_WEB=anaconda
 
-WEB_PORT=8888
+WEB_PORT=8000
 
 echo ""
 echo ""
@@ -28,7 +28,7 @@ if [[ "$#" -gt 0 ]] ; then
         CMD="$2"
         RUNMODE="-ti --rm"
         NAME=""
-        PORTS="$1:8888"
+        PORTS="$1:8000"
         echo "Starting server on port $1...."
         echo ""
         echo ""
@@ -42,14 +42,14 @@ if [[ "$#" -gt 0 ]] ; then
     fi
 fi
 
-#    -v `pwd`/home:/home \
 #    -v `pwd`/etc:/etc \
-#    -v `pwd`/jupyterhub:/srv/jupyterhub \
 
 docker run \
     $RUNMODE \
     -p $WEB_PORT:8000 \
     --name $CONTAINER_WEB \
+    -v `pwd`/jupyterhub:/srv/jupyterhub \
+    -v `pwd`/home:/home \
     $CONTAINER_IMAGE $CMD
      
 #    -ti \
