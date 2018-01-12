@@ -685,7 +685,7 @@ c.Authenticator.admin_users = set(['jerivas'])
 #  restrictions the authenticator has in place.
 #  
 #  If empty, does not perform any additional restriction.
-c.Authenticator.whitelist = set(['jerivas'])
+c.Authenticator.whitelist = set(['jerivas','test'])
 
 #------------------------------------------------------------------------------
 # LocalAuthenticator(Authenticator) configuration
@@ -761,3 +761,7 @@ c.LocalAuthenticator.create_system_users = True
 
 ## The number of threads to allocate for encryption
 #c.CryptKeeper.n_threads = 8
+
+
+c = get_config()
+c.CourseDirectory.root = '/srv/jupyterhub/nbgrader/exchange'

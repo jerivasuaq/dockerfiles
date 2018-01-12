@@ -49,6 +49,7 @@ docker run \
     -p $WEB_PORT:8000 \
     --name $CONTAINER_WEB \
     -v `pwd`/jupyterhub:/srv/jupyterhub \
+    -v `pwd`/nbgrader:/srv/nbgrader \
     -v `pwd`/home:/home \
     $CONTAINER_IMAGE $CMD
      

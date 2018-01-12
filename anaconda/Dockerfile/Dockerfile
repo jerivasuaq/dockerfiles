@@ -4,7 +4,8 @@ MAINTAINER jerivas<jerivas@uaq.edu.mx>
 
 RUN \
     apt-get update && \
-    apt-get upgrade -y
+    apt-get upgrade -y && \
+	apt-get install -y vim
 
 RUN \
     /opt/conda/bin/conda install -y --quiet jupyter && \
