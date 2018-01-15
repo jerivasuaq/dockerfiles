@@ -20,3 +20,8 @@ Cling kernel
 
 https://github.com/root-project/cling/tree/master/tools/Jupyter
 
+R Kernel
+--------------------------------
+https://anaconda.org/r/r-irkernel
+https://anaconda.org/search?q=kernel
+

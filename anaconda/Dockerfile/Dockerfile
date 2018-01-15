@@ -49,8 +49,8 @@ RUN /opt/conda/bin/conda install -y -c conda-forge jupyter_contrib_nbextensions
 
 # Install Cling
 RUN cd .. && \
-    wget https://root.cern.ch/download/cling/cling_2017-09-15_ubuntu16.tar.bz2 && \
-    tar -xvjf cling_2017-09-15_ubuntu16.tar.bz2 && \
+    wget https://root.cern.ch/download/cling/cling_2018-01-14_ubuntu16.tar.bz2 && \
+    tar -xvjf cling_2018-01-14_ubuntu16.tar.bz2 && \
     rm cling_*.tar.bz2 && \
     mv cling_* cling
 
@@ -62,10 +62,12 @@ RUN cd .. && \
     jupyter-kernelspec install cling-cpp14 && \
     jupyter-kernelspec install cling-cpp11
 
+# Install R kernel
 RUN \
+    apt-get install -y software-properties-common python-software-properties && \
     add-apt-repository ppa:chronitis/jupyter && \
-    apt-get update && \
-    apt-get install irkernel
+    apt-get update  && \
+    conda install -y -c r r-irkernel 
 
 RUN rm -rf /var/lib/apt/lists/*
 RUN conda clean -t
