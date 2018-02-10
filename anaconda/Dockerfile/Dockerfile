@@ -69,8 +69,15 @@ RUN \
     apt-get update  && \
     conda install -y -c r r-irkernel 
 
+
+# Install extra packages
+RUN \
+    conda install -c menpo opencv && \
+    conda install -c conda-forge autopep8 jupyter_dashboards 
+
 RUN rm -rf /var/lib/apt/lists/*
-RUN conda clean -t
+RUN conda clean -t -y
+
 
 
 RUN \
