@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build -t jerivas/litecoin Dockerfile
+docker build -t jerivas/geekcoin Dockerfile
 
