@@ -1,4 +1,6 @@
 home/*
+etc/*
+
 jupyterhub/jupyterhub.sqlite
 jupyterhub/.nbgrader.log
 jupyterhub/jupyterhub_cookie_secret

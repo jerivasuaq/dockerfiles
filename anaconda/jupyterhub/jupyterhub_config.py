@@ -685,7 +685,7 @@ c.Authenticator.admin_users = set(['jerivas'])
 #  restrictions the authenticator has in place.
 #  
 #  If empty, does not perform any additional restriction.
-c.Authenticator.whitelist = set(['jerivas','test'])
+c.Authenticator.whitelist = set()
 
 #------------------------------------------------------------------------------
 # LocalAuthenticator(Authenticator) configuration

@@ -73,7 +73,13 @@ RUN \
 # Install extra packages
 RUN \
     conda install -c menpo opencv && \
-    conda install -c conda-forge autopep8 jupyter_dashboards 
+    conda install -c conda-forge jupyter_dashboards  && \
+    conda install -c jjhelmus tensorflow 
+
+# Install extra packages II
+RUN \
+    conda install -c jjhelmus tensorflow 
+
 
 RUN rm -rf /var/lib/apt/lists/*
 RUN conda clean -t -y

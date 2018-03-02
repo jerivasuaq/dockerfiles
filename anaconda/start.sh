@@ -15,11 +15,11 @@ echo ""
 echo ""
 sleep 1
 
-RUNMODE="-d --restart=unless-stopped"
 RUNMODE="--rm -ti "
+RUNMODE="-d --restart=unless-stopped"
 
 CMD=""
-#CMD="jupyterhub"
+CMD="jupyterhub"
 
 if [[ "$#" -gt 0 ]] ; then
 
@@ -50,6 +50,7 @@ docker run \
     --name $CONTAINER_WEB \
     -v `pwd`/jupyterhub:/srv/jupyterhub \
     -v `pwd`/nbgrader:/srv/nbgrader \
+    -v `pwd`/etc:/etc \
     -v `pwd`/home:/home \
     $CONTAINER_IMAGE $CMD
      
