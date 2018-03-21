@@ -6,4 +6,6 @@ jupyterhub/.nbgrader.log
 jupyterhub/jupyterhub_cookie_secret
 nbgrader/
 
+jupyterhub/core
+
 

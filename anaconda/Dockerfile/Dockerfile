@@ -80,6 +80,11 @@ RUN \
 RUN \
     conda install -c jjhelmus tensorflow 
 
+# Install extra packages III
+RUN \
+    conda install -c plotly plotly
+ 
+
 
 RUN rm -rf /var/lib/apt/lists/*
 RUN conda clean -t -y
