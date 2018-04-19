@@ -84,6 +84,10 @@ RUN \
 RUN \
     conda install -c plotly plotly
  
+# Install pdflatex support
+RUN \
+    apt-get install -y aptitude texlive-xetex texlive-latex-base
+
 
 
 RUN rm -rf /var/lib/apt/lists/*
